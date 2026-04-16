@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>For You 💖</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- START -->
+<div id="startScreen" class="start-screen">
+  <h2>💖 Tap to Start</h2>
+</div>
+
+<!-- CHAT -->
+<div class="chat-container" id="chatContainer">
+
+  <div class="header">
+    <img src="images/photo1.jpg" class="dp">
+    <div class="user-info">
+      <div class="name">De <span class="heart">❤️</span></div>
+      <div class="status" id="status">online</div>
+    </div>
+  </div>
+
+  <div id="chat"></div>
+</div>
+
+<!-- PHOTO -->
+<div id="photoScene" class="photo-scene">
+  <div class="particles" id="particles"></div>
+  <div class="bg-blur" id="bgBlur"></div>
+  <img id="photo">
+  <p id="caption"></p>
+</div>
+
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="images/music.mp3" type="audio/mpeg">
+</audio>
+
+<script src="script.js"></script>
+</body>
+</html>

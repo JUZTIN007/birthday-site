@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>For You 💖</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    h1 { color: pink; font-size: 36px; }
+
+    #countdown {
+      font-size: 30px;
+      margin-top: 20px;
+      text-shadow: 0 0 15px pink;
+    }
+  </style>
+</head>
+<body>
+
+<h1 id="title"></h1>
+<p id="line"></p>
+<div id="countdown"></div>
+
+<audio autoplay loop>
+  <source src="images/music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+function startCountdown() {
+  let el = document.getElementById("countdown");
+  let title = document.getElementById("title");
+  let line = document.getElementById("line");
+
+  function update() {
+    let now = new Date();
+    let year = now.getFullYear();
+    let birthday = new Date(year, 3, 25);
+
+    if (now > birthday) birthday = new Date(year + 1, 3, 25);
+
+    let diff = birthday - now;
+
+    let d = Math.floor(diff / (1000*60*60*24));
+    let h = Math.floor((diff/(1000*60*60))%24);
+    let m = Math.floor((diff/(1000*60))%60);
+    let s = Math.floor((diff/1000)%60);
+
+    el.innerText = `${d} Days ${h} Hours ${m} Min ${s} Sec`;
+
+    if (now.getDate() === 25 && now.getMonth() === 3) {
+      title.innerText = "🎉 Many More Happy Returns 🎂";
+      line.innerText = "Today is all about you… Madam 💖";
+    } else {
+      title.innerText = "💖 Advance Happy Birthday 💖";
+      line.innerText = "Counting days for you… De 💖";
+    }
+  }
+
+  update();
+  setInterval(update, 1000);
+}
+
+startCountdown();
+</script>
+
+</body>
+</html>

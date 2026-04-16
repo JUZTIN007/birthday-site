@@ -78,9 +78,9 @@ function startPhotoScene() {
   let text = document.getElementById("caption");
 
   let photos = [
-    "images/photo1.jpg",
-    "images/photo2.jpg",
-    "images/photo3.jpg"
+    "photo1.jpg",
+    "photo2.jpg",
+    "photo3.jpg"
   ];
 
   let captions = [

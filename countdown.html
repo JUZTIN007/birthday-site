@@ -15,26 +15,44 @@
       flex-direction: column;
       text-align: center;
     }
-  #dailyQuote {
-  margin-top: 20px;
-  font-size: 18px;
-  color: #ffd1dc;
-  font-style: italic;
-  text-shadow: 0 0 10px pink;
-}
 
-    h1 { color: pink; font-size: 36px; }
+    h1 {
+      color: pink;
+      font-size: 36px;
+    }
+
+    #line {
+      margin-top: 10px;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    #dailyQuote {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #ffd1dc;
+      font-style: italic;
+      text-shadow: 0 0 10px pink;
+      animation: fadeIn 1.5s ease;
+    }
 
     #countdown {
       font-size: 30px;
       margin-top: 20px;
       text-shadow: 0 0 15px pink;
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
+
 <body>
 
 <h1 id="title"></h1>
+<p id="line"></p>
 <p id="dailyQuote"></p>
 <div id="countdown"></div>
 
@@ -44,68 +62,72 @@
 
 <script>
 function startCountdown() {
+
   let quotes = [
-  "Some people don’t try to stand out… they just quietly do 💫",           // Day 1
-  "There’s something calm about you… like everything slows down a little 🌙", // Day 2
-  "You don’t say much sometimes… but it still feels like enough 💖",        // Day 3
-  "It’s strange how some people become familiar so quickly ✨",            // Day 4
-  "Maybe it was just a normal day… but it didn’t feel like one 🌸",         // Day 5
-  "That night… still crosses my mind sometimes 🌙",                         // Day 6 (your memory)
-  "I didn’t realize when it changed… but something did 💫",                // Day 7
-  "It's your day today… but somewhere along the way, you became more than just a day to remember 💖"        // Day 8 🎂
-];
+    "Some people don’t try to stand out… they just quietly do 💫",
+    "There’s something calm about you… like everything slows down a little 🌙",
+    "You don’t say much sometimes… but it still feels like enough 💖",
+    "It’s strange how some people become familiar so quickly ✨",
+    "Maybe it was just a normal day… but it didn’t feel like one 🌸",
+    "That night… still crosses my mind sometimes 🌙",
+    "I didn’t realize when it changed… but something did 💫",
+    "It's your day today… but somewhere along the way, you became more than just a day to remember 💖"
+  ];
+
   let el = document.getElementById("countdown");
   let title = document.getElementById("title");
   let line = document.getElementById("line");
 
   function update() {
+
     let now = new Date();
     let year = now.getFullYear();
     let birthday = new Date(year, 3, 25);
 
-    if (now > birthday) birthday = new Date(year + 1, 3, 25);
+    if (now > birthday) {
+      birthday = new Date(year + 1, 3, 25);
+    }
 
     let diff = birthday - now;
 
-    let d = Math.floor(diff / (1000*60*60*24));
-    let h = Math.floor((diff/(1000*60*60))%24);
-    let m = Math.floor((diff/(1000*60))%60);
-    let s = Math.floor((diff/1000)%60);
+    let d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    let h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    let m = Math.floor((diff / (1000 * 60)) % 60);
+    let s = Math.floor((diff / 1000) % 60);
 
     el.innerText = `${d} Days ${h} Hours ${m} Min ${s} Sec`;
 
+    // 🎂 Birthday
     if (now.getDate() === 25 && now.getMonth() === 3) {
 
-  // 🎂 Birthday
-  title.innerText = "🎉 Many More Happy Returns 🎂";
-  line.innerText = "Today is all about you… Madam ❤️";
+      title.innerText = "🎉 Many More Happy Returns 🎂";
+      line.innerText = "Today is all about you… Madam ❤️";
 
-  let quoteEl = document.getElementById("dailyQuote");
-  quoteEl.innerText = "";
+      let quoteEl = document.getElementById("dailyQuote");
+      quoteEl.innerText = "";
 
-} else {
+    } else {
 
-  let quoteEl = document.getElementById("dailyQuote");
+      let quoteEl = document.getElementById("dailyQuote");
 
-  let startDate = new Date("April 18, 2026");
-  let today = new Date();
+      let startDate = new Date("April 18, 2026");
+      let today = new Date();
 
-  let diffTime = today - startDate;
-  let dayIndex = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      let diffTime = today - startDate;
+      let dayIndex = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-  if (dayIndex >= 0 && dayIndex < quotes.length) {
-    quoteEl.innerText = quotes[dayIndex];
-  } else if (dayIndex >= quotes.length) {
-    quoteEl.innerText = quotes[quotes.length - 1];
-  } else {
-    quoteEl.innerText = quotes[0];
+      if (dayIndex >= 0 && dayIndex < quotes.length) {
+        quoteEl.innerText = quotes[dayIndex];
+      } else if (dayIndex >= quotes.length) {
+        quoteEl.innerText = quotes[quotes.length - 1];
+      } else {
+        quoteEl.innerText = quotes[0];
+      }
+
+      title.innerText = "💖 Advance Happy Birthday 💖";
+      line.innerText = "Counting days for you… De ❤️";
+    }
   }
-
-  // 💖 Advance message
-  title.innerText = "💖 Advance Happy Birthday 💖";
-  line.innerText = "Counting days for you… De ❤️";
-}
-  
 
   update();
   setInterval(update, 1000);

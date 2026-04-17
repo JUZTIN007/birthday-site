@@ -16,7 +16,6 @@
       color: white;
     }
 
-    /* 🌄 BACKGROUND */
     .bg {
       position: fixed;
       width: 100%;
@@ -31,7 +30,6 @@
     #bg1 { opacity: 1; }
     #bg2 { opacity: 0; }
 
-    /* ✨ CARD */
     .card {
       backdrop-filter: blur(20px);
       background: rgba(255, 255, 255, 0.08);
@@ -39,7 +37,6 @@
       border-radius: 25px;
       text-align: center;
       box-shadow: 0 0 40px rgba(255, 192, 203, 0.3);
-      animation: fadeUp 1.5s ease;
       max-width: 400px;
     }
 
@@ -51,7 +48,6 @@
     #line {
       margin-top: 10px;
       font-size: 15px;
-      opacity: 0.8;
     }
 
     #dailyQuote {
@@ -60,7 +56,6 @@
       color: #ffd1dc;
       font-style: italic;
       text-shadow: 0 0 10px pink;
-      animation: fadeIn 1.5s ease;
     }
 
     #countdown {
@@ -69,11 +64,9 @@
       text-shadow: 0 0 10px pink;
     }
 
-    /* ❤️ HEARTS */
     .heart {
       position: absolute;
       color: pink;
-      font-size: 18px;
       animation: float 6s linear infinite;
     }
 
@@ -81,16 +74,6 @@
       0% { transform: translateY(100vh); opacity: 0; }
       50% { opacity: 1; }
       100% { transform: translateY(-10vh); opacity: 0; }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -112,30 +95,25 @@
 </audio>
 
 <script>
-// 🌄 BACKGROUND TRANSITION
+// 🌄 BACKGROUND
 let images = ["photo1.jpg","photo2.jpg","photo3.jpg"];
 let bg1 = document.getElementById("bg1");
 let bg2 = document.getElementById("bg2");
 
-let current = 0;
-let showingFirst = true;
-
+let i = 0;
 bg1.style.backgroundImage = `url(${images[0]})`;
 
 setInterval(() => {
-  current = (current + 1) % images.length;
+  i = (i + 1) % images.length;
+  bg2.style.backgroundImage = `url(${images[i]})`;
+  bg2.style.opacity = 1;
+  bg1.style.opacity = 0;
 
-  if (showingFirst) {
-    bg2.style.backgroundImage = `url(${images[current]})`;
-    bg2.style.opacity = 1;
-    bg1.style.opacity = 0;
-  } else {
-    bg1.style.backgroundImage = `url(${images[current]})`;
+  setTimeout(() => {
+    bg1.style.backgroundImage = bg2.style.backgroundImage;
     bg1.style.opacity = 1;
     bg2.style.opacity = 0;
-  }
-
-  showingFirst = !showingFirst;
+  }, 2000);
 
 }, 6000);
 
@@ -174,26 +152,23 @@ function startCountdown() {
 
     el.innerText = `${d} Days ${h} Hours ${m} Min ${s} Sec`;
 
-    if (now.getDate() === 25 && now.getMonth() === 3) {
+    // 🔥 DAILY QUOTE LOGIC (SIMPLE + PERFECT)
+    let startDate = new Date(2026, 3, 18); // April 18
+    let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
+    let dayIndex = Math.floor((today - startDate)/(1000*60*60*24));
+
+    // ✅ Always valid index
+    if (dayIndex < 0) dayIndex = 0;
+    if (dayIndex >= quotes.length) dayIndex = quotes.length - 1;
+
+    quoteEl.innerText = quotes[dayIndex];
+
+    // 🎂 TITLE
+    if (now.getDate() === 25 && now.getMonth() === 3) {
       title.innerText = "🎉 Many More Happy Returns 🎂";
       line.innerText = "Today is all about you… De ❤️";
-      quoteEl.innerText = "";
-
     } else {
-
-      let startDate = new Date("April 18, 2026");
-      let dayIndex = Math.floor((now - startDate)/(1000*60*60*24));
-
-      // ✅ FIXED QUOTE LOGIC
-      if (dayIndex >= 0 && dayIndex < quotes.length) {
-        quoteEl.innerText = quotes[dayIndex];
-      } else if (dayIndex >= quotes.length) {
-        quoteEl.innerText = quotes[quotes.length - 1];
-      } else {
-        quoteEl.innerText = quotes[0];
-      }
-
       title.innerText = "💖 Advance Happy Birthday 💖";
       line.innerText = "Counting days for you… De ❤️";
     }

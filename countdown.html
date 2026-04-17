@@ -4,70 +4,95 @@
   <title>For You 💖</title>
 
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      margin: 0;
       font-family: Arial;
-      color: white;
+      overflow: hidden;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      flex-direction: column;
-      text-align: center;
-      overflow: hidden;
+      color: white;
     }
 
-    /* 🌄 BLURRED BACKGROUND */
-    body::before {
-      content: "";
-      position: absolute;
+    /* 🌄 BACKGROUND LAYERS */
+    .bg {
+      position: fixed;
       width: 100%;
       height: 100%;
-      background: url("photo1.jpg") center/cover no-repeat;
-      filter: blur(15px) brightness(0.4);
-      z-index: -1;
-      animation: bgChange 15s infinite;
+      background-size: cover;
+      background-position: center;
+      filter: blur(20px) brightness(0.5);
+      z-index: -2;
+      transition: opacity 2s ease-in-out;
     }
 
-    @keyframes bgChange {
-      0% { background-image: url("photo1.jpg"); }
-      33% { background-image: url("photo2.jpg"); }
-      66% { background-image: url("photo3.jpg"); }
-      100% { background-image: url("photo1.jpg"); }
+    #bg1 { opacity: 1; }
+    #bg2 { opacity: 0; }
+
+    /* ✨ GLASS CARD */
+    .card {
+      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 40px;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255, 192, 203, 0.3);
+      animation: fadeUp 1.5s ease;
+      max-width: 400px;
     }
 
     h1 {
-      color: pink;
-      font-size: 36px;
+      color: #ff9bb3;
+      margin-bottom: 10px;
       text-shadow: 0 0 10px pink;
     }
 
     #line {
-      margin-top: 10px;
-      font-size: 16px;
+      font-size: 15px;
+      opacity: 0.8;
+      margin-bottom: 15px;
     }
 
     #dailyQuote {
-      margin-top: 20px;
-      font-size: 18px;
+      font-size: 17px;
       color: #ffd1dc;
       font-style: italic;
-      text-shadow: 0 0 10px pink;
-      animation: fadeIn 1.5s ease;
+      margin-top: 10px;
+      opacity: 0;
+      animation: fadeIn 2s forwards;
     }
 
     #countdown {
-      font-size: 30px;
+      font-size: 24px;
       margin-top: 20px;
-      text-shadow: 0 0 15px pink;
+      text-shadow: 0 0 10px pink;
     }
 
-    /* ❤️ FLOATING HEARTS */
+    /* 🎶 BUTTON */
+    #playBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: none;
+      background: pink;
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
+
+    #playBtn:hover {
+      transform: scale(1.1);
+    }
+
+    /* ❤️ HEARTS */
     .heart {
       position: absolute;
       color: pink;
-      font-size: 20px;
       animation: float 6s linear infinite;
+      font-size: 18px;
     }
 
     @keyframes float {
@@ -76,20 +101,13 @@
       100% { transform: translateY(-10vh); opacity: 0; }
     }
 
-    /* 🎶 BUTTON */
-    #playBtn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 20px;
-      background: pink;
-      color: black;
-      cursor: pointer;
-      font-weight: bold;
+    /* ✨ ANIMATIONS */
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
@@ -97,18 +115,49 @@
 
 <body>
 
-<h1 id="title"></h1>
-<p id="line"></p>
-<p id="dailyQuote"></p>
-<div id="countdown"></div>
+<div id="bg1" class="bg"></div>
+<div id="bg2" class="bg"></div>
 
-<button id="playBtn">▶️ Play Music</button>
+<div class="card">
+  <h1 id="title"></h1>
+  <p id="line"></p>
+  <p id="dailyQuote"></p>
+  <div id="countdown"></div>
+  <button id="playBtn">▶️ Play Music</button>
+</div>
 
 <audio id="music" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
+let images = ["photo1.jpg","photo2.jpg","photo3.jpg"];
+let bg1 = document.getElementById("bg1");
+let bg2 = document.getElementById("bg2");
+
+let current = 0;
+let showingFirst = true;
+
+bg1.style.backgroundImage = `url(${images[0]})`;
+
+setInterval(() => {
+  current = (current + 1) % images.length;
+
+  if (showingFirst) {
+    bg2.style.backgroundImage = `url(${images[current]})`;
+    bg2.style.opacity = 1;
+    bg1.style.opacity = 0;
+  } else {
+    bg1.style.backgroundImage = `url(${images[current]})`;
+    bg1.style.opacity = 1;
+    bg2.style.opacity = 0;
+  }
+
+  showingFirst = !showingFirst;
+
+}, 6000);
+
+// 🎂 COUNTDOWN + QUOTES
 function startCountdown() {
 
   let quotes = [
@@ -129,10 +178,9 @@ function startCountdown() {
   function update() {
 
     let now = new Date();
-    let year = now.getFullYear();
-    let birthday = new Date(year, 3, 25);
+    let birthday = new Date(now.getFullYear(), 3, 25);
 
-    if (now > birthday) birthday = new Date(year + 1, 3, 25);
+    if (now > birthday) birthday = new Date(now.getFullYear()+1,3,25);
 
     let diff = birthday - now;
 
@@ -143,25 +191,18 @@ function startCountdown() {
 
     el.innerText = `${d} Days ${h} Hours ${m} Min ${s} Sec`;
 
+    let quoteEl = document.getElementById("dailyQuote");
+
     if (now.getDate() === 25 && now.getMonth() === 3) {
-
       title.innerText = "🎉 Many More Happy Returns 🎂";
-      line.innerText = "Today is all about you… Madam ❤️";
-      document.getElementById("dailyQuote").innerText = "";
-
+      line.innerText = "Today is all about you… De ❤️";
+      quoteEl.innerText = "";
     } else {
-
       let startDate = new Date("April 18, 2026");
-      let today = new Date();
-      let diffTime = today - startDate;
-      let dayIndex = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-      let quoteEl = document.getElementById("dailyQuote");
+      let dayIndex = Math.floor((now - startDate)/(1000*60*60*24));
 
       if (dayIndex >= 0 && dayIndex < quotes.length) {
         quoteEl.innerText = quotes[dayIndex];
-      } else {
-        quoteEl.innerText = quotes[quotes.length - 1];
       }
 
       title.innerText = "💖 Advance Happy Birthday 💖";
@@ -170,24 +211,23 @@ function startCountdown() {
   }
 
   update();
-  setInterval(update, 1000);
+  setInterval(update,1000);
 }
 
-// 🎶 MUSIC PLAY BUTTON
-document.getElementById("playBtn").onclick = function() {
+// 🎶 MUSIC
+document.getElementById("playBtn").onclick = () => {
   document.getElementById("music").play();
 };
 
-// ❤️ HEART GENERATOR
-setInterval(() => {
-  let heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerText = "❤️";
-  heart.style.left = Math.random() * 100 + "vw";
-  document.body.appendChild(heart);
-
-  setTimeout(() => heart.remove(), 6000);
-}, 500);
+// ❤️ HEARTS
+setInterval(()=>{
+  let h=document.createElement("div");
+  h.className="heart";
+  h.innerText="❤️";
+  h.style.left=Math.random()*100+"vw";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+},500);
 
 startCountdown();
 </script>

@@ -2,11 +2,11 @@
 <html>
 <head>
   <title>For You 💖</title>
+
   <style>
     body {
       margin: 0;
       font-family: Arial;
-      background: black;
       color: white;
       display: flex;
       justify-content: center;
@@ -14,17 +14,37 @@
       height: 100vh;
       flex-direction: column;
       text-align: center;
+      overflow: hidden;
+    }
+
+    /* 🌄 BLURRED BACKGROUND */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url("photo1.jpg") center/cover no-repeat;
+      filter: blur(15px) brightness(0.4);
+      z-index: -1;
+      animation: bgChange 15s infinite;
+    }
+
+    @keyframes bgChange {
+      0% { background-image: url("photo1.jpg"); }
+      33% { background-image: url("photo2.jpg"); }
+      66% { background-image: url("photo3.jpg"); }
+      100% { background-image: url("photo1.jpg"); }
     }
 
     h1 {
       color: pink;
       font-size: 36px;
+      text-shadow: 0 0 10px pink;
     }
 
     #line {
       margin-top: 10px;
       font-size: 16px;
-      opacity: 0.9;
     }
 
     #dailyQuote {
@@ -42,6 +62,32 @@
       text-shadow: 0 0 15px pink;
     }
 
+    /* ❤️ FLOATING HEARTS */
+    .heart {
+      position: absolute;
+      color: pink;
+      font-size: 20px;
+      animation: float 6s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh); opacity: 0; }
+    }
+
+    /* 🎶 BUTTON */
+    #playBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background: pink;
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -56,7 +102,9 @@
 <p id="dailyQuote"></p>
 <div id="countdown"></div>
 
-<audio autoplay loop>
+<button id="playBtn">▶️ Play Music</button>
+
+<audio id="music" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
@@ -84,44 +132,36 @@ function startCountdown() {
     let year = now.getFullYear();
     let birthday = new Date(year, 3, 25);
 
-    if (now > birthday) {
-      birthday = new Date(year + 1, 3, 25);
-    }
+    if (now > birthday) birthday = new Date(year + 1, 3, 25);
 
     let diff = birthday - now;
 
-    let d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    let h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    let m = Math.floor((diff / (1000 * 60)) % 60);
-    let s = Math.floor((diff / 1000) % 60);
+    let d = Math.floor(diff / (1000*60*60*24));
+    let h = Math.floor((diff/(1000*60*60))%24);
+    let m = Math.floor((diff/(1000*60))%60);
+    let s = Math.floor((diff/1000)%60);
 
     el.innerText = `${d} Days ${h} Hours ${m} Min ${s} Sec`;
 
-    // 🎂 Birthday
     if (now.getDate() === 25 && now.getMonth() === 3) {
 
       title.innerText = "🎉 Many More Happy Returns 🎂";
       line.innerText = "Today is all about you… Madam ❤️";
-
-      let quoteEl = document.getElementById("dailyQuote");
-      quoteEl.innerText = "";
+      document.getElementById("dailyQuote").innerText = "";
 
     } else {
 
-      let quoteEl = document.getElementById("dailyQuote");
-
       let startDate = new Date("April 18, 2026");
       let today = new Date();
-
       let diffTime = today - startDate;
       let dayIndex = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
+      let quoteEl = document.getElementById("dailyQuote");
+
       if (dayIndex >= 0 && dayIndex < quotes.length) {
         quoteEl.innerText = quotes[dayIndex];
-      } else if (dayIndex >= quotes.length) {
-        quoteEl.innerText = quotes[quotes.length - 1];
       } else {
-        quoteEl.innerText = quotes[0];
+        quoteEl.innerText = quotes[quotes.length - 1];
       }
 
       title.innerText = "💖 Advance Happy Birthday 💖";
@@ -132,6 +172,22 @@ function startCountdown() {
   update();
   setInterval(update, 1000);
 }
+
+// 🎶 MUSIC PLAY BUTTON
+document.getElementById("playBtn").onclick = function() {
+  document.getElementById("music").play();
+};
+
+// ❤️ HEART GENERATOR
+setInterval(() => {
+  let heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerText = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 6000);
+}, 500);
 
 startCountdown();
 </script>

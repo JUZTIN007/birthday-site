@@ -90,11 +90,19 @@
   <div id="countdown"></div>
 </div>
 
-<audio autoplay loop>
+<!-- 🎵 AUDIO FIX -->
+<audio id="music" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
+
+// 🎵 autoplay fix (browser restriction workaround)
+document.addEventListener("click", () => {
+  document.getElementById("music").play();
+}, { once: true });
+
+
 // 🌄 BACKGROUND
 let images = ["photo1.jpg","photo2.jpg","photo3.jpg"];
 let bg1 = document.getElementById("bg1");
@@ -117,18 +125,19 @@ setInterval(() => {
 
 }, 6000);
 
+
 // 🎂 COUNTDOWN + QUOTES
 function startCountdown() {
 
   let quotes = [
     "Some people don’t try to stand out… they just quietly do 💫",
-    "There’s something calm about you… like everything slows down a little 🌙",
-    "You don’t say much sometimes… but it still feels like enough 💖",
-    "It’s strange how some people become familiar so quickly ✨",
-    "Maybe it was just a normal day… but it didn’t feel like one 🌸",
-    "That night… still crosses my mind sometimes 🌙",
-    "I didn’t realize when it changed… but something did 💫",
-    "It's your day today… but somewhere along the way, you became more than just a day to remember 💖"
+    "There’s something calm about you… like everything slows down a little when you’re around 🌙",
+    "You don’t always say much… but somehow, it still feels like more than enough 💖",
+    "It’s strange how some people become familiar so quickly… like they’ve always been there ✨",
+    "Maybe it was just a normal day… but somehow, it didn’t feel like one anymore 🌸",
+    "That night… it wasn’t anything special, but it still finds its way back to my mind sometimes 🌙",
+    "I didn’t notice when things started to change… but somewhere along the way, they did 💫",
+    "It’s your day today… but honestly, somewhere along the way, you became more than just a day to remember 💖"
   ];
 
   let el = document.getElementById("countdown");
@@ -152,15 +161,12 @@ function startCountdown() {
 
     el.innerText = `${d} Days ${h} Hours ${m} Min ${s} Sec`;
 
-    // 🔥 DAILY QUOTE LOGIC (SIMPLE + PERFECT)
-    let startDate = new Date(2026, 3, 18); // April 18
+    // ✅ LOOPING DAILY QUOTES FIX
+    let startDate = new Date(2026, 3, 18);
     let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     let dayIndex = Math.floor((today - startDate)/(1000*60*60*24));
-
-    // ✅ Always valid index
-    if (dayIndex < 0) dayIndex = 0;
-    if (dayIndex >= quotes.length) dayIndex = quotes.length - 1;
+    dayIndex = ((dayIndex % quotes.length) + quotes.length) % quotes.length;
 
     quoteEl.innerText = quotes[dayIndex];
 
@@ -178,7 +184,8 @@ function startCountdown() {
   setInterval(update,1000);
 }
 
-// ❤️ HEARTS
+
+// ❤️ FLOATING HEARTS
 setInterval(()=>{
   let h=document.createElement("div");
   h.className="heart";
@@ -188,7 +195,9 @@ setInterval(()=>{
   setTimeout(()=>h.remove(),6000);
 },500);
 
+
 startCountdown();
+
 </script>
 
 </body>
